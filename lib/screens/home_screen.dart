@@ -928,7 +928,6 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: MenuDrawer(
         session: widget.session,
         bookmarks: widget.bookmarks,
-        repository: widget.repository,
         onOpenArticle: _openArticleFromDrawer,
       ),
       appBar: AppBar(

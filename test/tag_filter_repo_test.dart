@@ -1,23 +1,12 @@
-import "dart:io";
-
 import "package:flutter_test/flutter_test.dart";
-import "package:punzh_dict/data/db.dart";
-import "package:punzh_dict/data/dictionary_repository.dart";
-import "package:sqflite_common_ffi/sqflite_ffi.dart";
+
+import "support/mini_repo.dart";
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  setUpAll(() {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-  });
+  setUpMiniSqlite();
 
   test("listFilterTags and letter/search AND filters", () async {
-    final mini = File("test/fixtures/mini.sqlite").absolute;
-    final db = await openDictionaryDbFile(mini.path);
-    addTearDown(db.close);
-    final repo = DictionaryRepository(db);
+    final repo = (await openMiniRepo()).repo;
 
     final tags = await repo.listFilterTags();
     expect(tags.map((t) => t.id), containsAll([33, 36, 50]));
@@ -47,10 +36,7 @@ void main() {
   });
 
   test("facets from article ids show tags present in hits", () async {
-    final mini = File("test/fixtures/mini.sqlite").absolute;
-    final db = await openDictionaryDbFile(mini.path);
-    addTearDown(db.close);
-    final repo = DictionaryRepository(db);
+    final repo = (await openMiniRepo()).repo;
 
     final aiga = await repo.tagFacetsForArticleIds([1]);
     expect(aiga.optionsForType(2).map((t) => t.id), [33]);
@@ -78,17 +64,10 @@ void main() {
   });
 
   test("impossible combinations are disabled", () async {
-    final mini = File("test/fixtures/mini.sqlite").absolute;
-    final db = await openDictionaryDbFile(mini.path);
-    addTearDown(db.close);
-    final repo = DictionaryRepository(db);
+    final repo = (await openMiniRepo()).repo;
 
-    // Article 1 = noun; article 2 = verb + phrase. Same type group (grammar):
-    // selecting noun disables verb because AND within one type is radio —
-    // enabled set for type 2 with noun selected still includes noun; verb is
-    // not co-present on any remaining article when other axes empty... wait,
-    // same type: others=[] so reachable = full base, both enabled.
-    // Use cross-type: select phrase, then only verb (article 2) stays for grammar.
+    // Article 1 = noun; article 2 = verb + phrase. Cross-type: select phrase,
+    // then only verb (article 2) stays for grammar.
     final facets = await repo.tagFacetsForArticleIds(
       [1, 2],
       selectedTagIds: const [],

@@ -33,6 +33,36 @@ class DictTag {
   String get label => name.trim().isNotEmpty ? name : tag;
 }
 
+/// Sort: sorting ASC, label, id (matches website filter lists).
+int compareDictTags(DictTag a, DictTag b) {
+  final sa = a.sorting ?? 1000000000;
+  final sb = b.sorting ?? 1000000000;
+  final bySort = sa.compareTo(sb);
+  if (bySort != 0) return bySort;
+  final byLabel = a.label.compareTo(b.label);
+  if (byLabel != 0) return byLabel;
+  return a.id.compareTo(b.id);
+}
+
+/// Map a `tags` row (or join projection with id/tag/name/type/level/sorting).
+DictTag dictTagFromRow(Map<String, Object?> row) {
+  int? asInt(Object? v) {
+    if (v == null) return null;
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    return int.tryParse("$v");
+  }
+
+  return DictTag(
+    id: asInt(row["id"])!,
+    tag: row["tag"] as String? ?? "",
+    name: row["name"] as String? ?? "",
+    type: asInt(row["type"]) ?? 0,
+    level: asInt(row["level"]) ?? 0,
+    sorting: asInt(row["sorting"]),
+  );
+}
+
 /// In-memory filter selection: ≤1 tag per type + optional phraseologism flag.
 class TagFilterState extends ChangeNotifier {
   final Map<int, int> _selectedByType = {};
@@ -65,15 +95,7 @@ class TagFilterState extends ChangeNotifier {
 
   List<DictTag> tagsOfType(int type) {
     final list = _catalog.values.where((t) => t.type == type).toList();
-    list.sort((a, b) {
-      final sa = a.sorting ?? 1000000000;
-      final sb = b.sorting ?? 1000000000;
-      final c = sa.compareTo(sb);
-      if (c != 0) return c;
-      final n = a.label.compareTo(b.label);
-      if (n != 0) return n;
-      return a.id.compareTo(b.id);
-    });
+    list.sort(compareDictTags);
     return list;
   }
 

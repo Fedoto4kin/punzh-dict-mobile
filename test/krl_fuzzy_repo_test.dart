@@ -1,24 +1,12 @@
-
-import "dart:io";
-
 import "package:flutter_test/flutter_test.dart";
-import "package:punzh_dict/data/db.dart";
-import "package:punzh_dict/data/dictionary_repository.dart";
-import "package:sqflite_common_ffi/sqflite_ffi.dart";
+
+import "support/mini_repo.dart";
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  setUpAll(() {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-  });
+  setUpMiniSqlite();
 
   test("exact miss yields nearby suggestion", () async {
-    final mini = File("test/fixtures/mini.sqlite").absolute;
-    final db = await openDictionaryDbFile(mini.path);
-    addTearDown(db.close);
-    final repo = DictionaryRepository(db);
+    final repo = (await openMiniRepo()).repo;
 
     expect(await repo.searchKarelian("bojla"), isEmpty);
     final sugg = await repo.searchKarelianSuggestions("bojla");
@@ -26,10 +14,7 @@ void main() {
   });
 
   test("exact hit finds article", () async {
-    final mini = File("test/fixtures/mini.sqlite").absolute;
-    final db = await openDictionaryDbFile(mini.path);
-    addTearDown(db.close);
-    final repo = DictionaryRepository(db);
+    final repo = (await openMiniRepo()).repo;
     final hits = await repo.searchKarelian("boila");
     expect(hits.map((a) => a.word), ["boila"]);
   });

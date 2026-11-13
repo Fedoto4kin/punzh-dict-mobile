@@ -116,17 +116,7 @@ class DictionaryRepository {
       ORDER BY type ASC, sorting ASC, name ASC, id ASC
       """,
     );
-    return [
-      for (final r in rows)
-        DictTag(
-          id: _asInt(r["id"])!,
-          tag: r["tag"] as String? ?? "",
-          name: r["name"] as String? ?? "",
-          type: _asInt(r["type"]) ?? 0,
-          level: _asInt(r["level"]) ?? 0,
-          sorting: _asInt(r["sorting"]),
-        ),
-    ];
+    return [for (final r in rows) dictTagFromRow(r)];
   }
 
   /// Fast letter index without POS/gloss enrich (for progressive UI).
@@ -435,15 +425,7 @@ class DictionaryRepository {
           );
         }
       }
-      tags.sort((a, b) {
-        final sa = a.sorting ?? 1000000000;
-        final sb = b.sorting ?? 1000000000;
-        final c = sa.compareTo(sb);
-        if (c != 0) return c;
-        final n = a.label.compareTo(b.label);
-        if (n != 0) return n;
-        return a.id.compareTo(b.id);
-      });
+      tags.sort(compareDictTags);
       return tags;
     }
 
@@ -562,15 +544,7 @@ class DictionaryRepository {
       limit: 1,
     );
     if (rows.isEmpty) return null;
-    final r = rows.first;
-    return DictTag(
-      id: _asInt(r["id"])!,
-      tag: r["tag"] as String? ?? "",
-      name: r["name"] as String? ?? "",
-      type: _asInt(r["type"]) ?? 0,
-      level: _asInt(r["level"]) ?? 0,
-      sorting: _asInt(r["sorting"]),
-    );
+    return dictTagFromRow(rows.first);
   }
 
   static int? _asInt(Object? v) {

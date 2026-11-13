@@ -31,13 +31,11 @@ class MenuDrawer extends StatefulWidget {
     super.key,
     required this.session,
     required this.bookmarks,
-    required this.repository,
     required this.onOpenArticle,
   });
 
   final DictionarySession session;
   final BookmarkStore bookmarks;
-  final DictionaryRepository repository;
   final void Function(ArticleSummary summary) onOpenArticle;
 
   @override
@@ -102,7 +100,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                 ),
               _DrawerPane.bookmarks => _BookmarksPane(
                   bookmarks: widget.bookmarks,
-                  repository: widget.repository,
+                  repository: widget.session.repository,
                   onBack: _goMenu,
                   onOpenArticle: (summary) {
                     FocusManager.instance.primaryFocus?.unfocus();

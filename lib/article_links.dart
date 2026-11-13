@@ -36,14 +36,7 @@ String foldLemmaKey(String word) {
   w = w.replaceAll(RegExp(r"(?:\s+(?:\d+|[IVXivx]{1,5}))+$"), "").trim();
   w = w.replaceAll("~", "");
   w = foldInteriorHyphens(w);
-  w = w
-      .replaceAll("š", "s")
-      .replaceAll("č", "c")
-      .replaceAll("ž", "z")
-      .replaceAll("Š", "s")
-      .replaceAll("Č", "c")
-      .replaceAll("Ž", "z");
-  return w;
+  return foldKrlSibilants(w);
 }
 
 Map<String, int> lemmaIdMap(Iterable<ArticleOutboundLink> links) {

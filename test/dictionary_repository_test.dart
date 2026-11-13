@@ -1,28 +1,17 @@
-import "dart:io";
-
 import "package:flutter_test/flutter_test.dart";
-import "package:punzh_dict/data/db.dart";
 import "package:punzh_dict/data/dictionary_repository.dart";
 import "package:punzh_dict/schema.dart";
-import "package:sqflite_common_ffi/sqflite_ffi.dart";
+
+import "support/mini_repo.dart";
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  setUpAll(() {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-  });
+  setUpMiniSqlite();
 
   test("mini fixture: letter A and Russian substring", () async {
-    final mini = File("test/fixtures/mini.sqlite").absolute;
-    expect(mini.existsSync(), isTrue, reason: mini.path);
+    final mini = await openMiniRepo();
+    final repo = mini.repo;
 
-    final db = await openDictionaryDbFile(mini.path);
-    addTearDown(db.close);
-    final repo = DictionaryRepository(db);
-
-    final meta = await db.query(
+    final meta = await mini.db.query(
       "meta",
       where: "key = ?",
       whereArgs: ["schema_version"],

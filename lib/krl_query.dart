@@ -12,21 +12,26 @@ String foldInteriorHyphens(String text) {
   return text.replaceAllMapped(_interiorHyphen, (_) => " ");
 }
 
+/// Fold š/č/ž → s/c/z (case-preserving). Shared by ILIKE prep and lemma keys.
+String foldKrlSibilants(String text) {
+  return text
+      .replaceAll("š", "s")
+      .replaceAll("Š", "S")
+      .replaceAll("č", "c")
+      .replaceAll("Č", "C")
+      .replaceAll("ž", "z")
+      .replaceAll("Ž", "Z");
+}
+
 /// Map a user query to a SQLite/Postgres LIKE/ILIKE pattern.
 String prepareKrlIlikeQuery(String query) {
   var q = stripKrlApostrophes(query);
-  // Same keys as `_KRL_ILIKE_TRANS` in app/dict/search/krl.py.
+  // Same keys as `_KRL_ILIKE_TRANS` in app/dict/search/krl.py (sans sibilants).
   const map = <String, String>{
     ";": "",
     ",": "",
     "(": "",
     ")": "",
-    "š": "s",
-    "Š": "S",
-    "č": "c",
-    "Č": "C",
-    "ž": "z",
-    "Ž": "Z",
     "ü": "y",
     "Ü": "Y",
     "…": "",
@@ -37,7 +42,7 @@ String prepareKrlIlikeQuery(String query) {
   for (final unit in q.split("")) {
     buf.write(map[unit] ?? unit);
   }
-  q = buf.toString();
+  q = foldKrlSibilants(buf.toString());
   // Ves’egonsk i̮ may be typed as plain i (documented on the first index page).
   q = q.replaceAll("i̮", "i");
   return foldInteriorHyphens(q);

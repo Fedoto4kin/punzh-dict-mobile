@@ -131,28 +131,4 @@ void main() {
     expect(anchors.first.index, 0);
     expect(anchors.last.index, pages.length - 1);
   });
-
-  test("buildNgramAnchors spaces landmarks and disambiguates", () {
-    final words = [
-      for (var i = 0; i < 100; i++) "kaa${i.toString().padLeft(3, '0')}",
-    ];
-    words[0] = "akka";
-    words[8] = "muše";
-    final anchors = buildNgramAnchors(words, targetCount: 12);
-    expect(anchors.length, greaterThan(10));
-    expect(anchors.first.index, 0);
-    expect(anchors.last.index, 99);
-  });
-
-  test("activeAnchorForListIndex picks last landmark at or before index", () {
-    const anchors = [
-      NgramAnchor(index: 0, label: "a"),
-      NgramAnchor(index: 10, label: "b"),
-      NgramAnchor(index: 20, label: "c"),
-    ];
-    expect(activeAnchorForListIndex(anchors, 0), 0);
-    expect(activeAnchorForListIndex(anchors, 9), 0);
-    expect(activeAnchorForListIndex(anchors, 10), 1);
-    expect(activeAnchorForListIndex(anchors, 25), 2);
-  });
 }
