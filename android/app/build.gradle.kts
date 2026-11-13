@@ -36,6 +36,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    // AGP lintVital crashes on JDK 18 (CommentDetector / List.removeLast) while
+    // scanning plugin sources (e.g. url_launcher). Skip for release APK builds.
+    lint {
+        checkReleaseBuilds = false
+    }
 }
 
 kotlin {
