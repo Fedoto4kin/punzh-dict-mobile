@@ -9,6 +9,7 @@ Sibling monorepo данных/сайта: **`../punzh-dict`**
 | Тема | Где |
 |------|-----|
 | Семантика словаря (этот repo) | [`docs/DICTIONARY.md`](docs/DICTIONARY.md) |
+| Ручной регресс (P7) | [`docs/MANUAL-REGRESSION.md`](docs/MANUAL-REGRESSION.md) |
 | Контракт sqlite/manifest (punzh-dict) | [`../punzh-dict/docs/plans/mobile-pack-contract.md`](../punzh-dict/docs/plans/mobile-pack-contract.md) |
 | Бэклог / история MVP | [`../punzh-dict/docs/plans/mobile-offline.md`](../punzh-dict/docs/plans/mobile-offline.md) |
 | Людям | [`README.md`](README.md) |

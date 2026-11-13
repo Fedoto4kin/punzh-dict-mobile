@@ -4,6 +4,7 @@
 
 Данные и сайт — sibling **`../punzh-dict`** (экспорт sqlite, `/mobile-pack/`, Django).  
 Семантика клиента: [`docs/DICTIONARY.md`](docs/DICTIONARY.md).  
+Ручной регресс: [`docs/MANUAL-REGRESSION.md`](docs/MANUAL-REGRESSION.md).  
 Агентам: [`AGENTS.md`](AGENTS.md).  
 Контракт пакета: [`../punzh-dict/docs/plans/mobile-pack-contract.md`](../punzh-dict/docs/plans/mobile-pack-contract.md).
 

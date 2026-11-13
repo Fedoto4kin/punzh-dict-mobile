@@ -97,6 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
   /// Primary hit set has 2+ marks or phrase — otherwise hide filter bar.
   bool _searchFacetsHaveChoices = false;
 
+  /// Alphabet strip: more content left/right of the viewport.
+  bool _abcMoreLeft = false;
+  bool _abcMoreRight = false;
+
+
   /// Fuzzy KRL suggestions when exact search is empty.
   List<String> _krlSuggestions = const [];
 
@@ -133,8 +138,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     widget.session.addListener(_onDictionarySession);
     _listScroll.addListener(_onListScroll);
+    _abcScroll.addListener(_updateAbcOverflowHints);
     unawaited(_loadFilterCatalog());
     _loadLetter();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateAbcOverflowHints());
   }
 
   Future<void> _loadFilterCatalog() async {
@@ -163,12 +170,42 @@ class _HomeScreenState extends State<HomeScreen> {
     _filters.dispose();
     _listScroll.removeListener(_onListScroll);
     _listScroll.dispose();
+    _abcScroll.removeListener(_updateAbcOverflowHints);
     _abcScroll.dispose();
     _letterPager.dispose();
     _pageIndex.dispose();
     _queryController.dispose();
     _queryFocus.dispose();
     super.dispose();
+  }
+
+  void _updateAbcOverflowHints() {
+    if (!_abcScroll.hasClients) return;
+    final pos = _abcScroll.position;
+    if (!pos.hasPixels || !pos.hasContentDimensions) return;
+    final left = pos.pixels > 2;
+    final right = pos.maxScrollExtent > 2 && pos.pixels < pos.maxScrollExtent - 2;
+    if (left == _abcMoreLeft && right == _abcMoreRight) return;
+    setState(() {
+      _abcMoreLeft = left;
+      _abcMoreRight = right;
+    });
+  }
+
+  void _nudgeAbcStrip({required bool forward}) {
+    if (!_abcScroll.hasClients) return;
+    final pos = _abcScroll.position;
+    final delta = (pos.viewportDimension * 0.55).clamp(48.0, 160.0);
+    final target = forward
+        ? (pos.pixels + delta).clamp(0.0, pos.maxScrollExtent)
+        : (pos.pixels - delta).clamp(0.0, pos.maxScrollExtent);
+    unawaited(
+      _abcScroll.animateTo(
+        target,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+      ),
+    );
   }
 
   void _scrollLetterChipIntoView(int index) {
@@ -184,6 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOutCubic,
       );
+      _updateAbcOverflowHints();
     });
   }
 
@@ -1016,38 +1054,72 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           SizedBox(
             height: 48,
-            child: ListView.separated(
-              controller: _abcScroll,
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              itemCount: _letters.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 4),
-              itemBuilder: (context, index) {
-                final letter = _letters[index];
-                final selected = letter == _letter && !_searchMode;
-                return KeyedSubtree(
-                  key: _chipKeys[index],
-                  child: ChoiceChip(
-                    label: Text(letter),
-                    selected: selected,
-                    showCheckmark: false,
-                    labelStyle: TextStyle(
-                      color: selected
-                          ? PunzhColors.brandDark
-                          : PunzhColors.navbar,
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+            // Chevrons sit in their own slots — never painted over chips.
+            child: Row(
+              children: [
+                SizedBox(
+                  width: _abcMoreLeft ? _kAbcEdgeHintWidth : 8,
+                  child: _abcMoreLeft
+                      ? _AbcScrollEdgeHint(
+                          icon: Icons.chevron_left,
+                          onTap: () => _nudgeAbcStrip(forward: false),
+                        )
+                      : null,
+                ),
+                Expanded(
+                  child: NotificationListener<ScrollMetricsNotification>(
+                    onNotification: (_) {
+                      _updateAbcOverflowHints();
+                      return false;
+                    },
+                    child: ListView.separated(
+                      controller: _abcScroll,
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.zero,
+                      itemCount: _letters.length,
+                      separatorBuilder: (_, _) => const SizedBox(width: 4),
+                      itemBuilder: (context, index) {
+                        final letter = _letters[index];
+                        final selected = letter == _letter && !_searchMode;
+                        return KeyedSubtree(
+                          key: _chipKeys[index],
+                          child: ChoiceChip(
+                            label: Text(letter),
+                            selected: selected,
+                            showCheckmark: false,
+                            labelStyle: TextStyle(
+                              color: selected
+                                  ? PunzhColors.brandDark
+                                  : PunzhColors.navbar,
+                              fontWeight: selected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                            ),
+                            backgroundColor: Colors.white,
+                            selectedColor:
+                                PunzhColors.brand.withValues(alpha: 0.22),
+                            side: BorderSide(
+                              color: selected
+                                  ? PunzhColors.brand
+                                  : const Color(0xFFADB5BD),
+                            ),
+                            onSelected: (_) => _goToLetter(letter),
+                          ),
+                        );
+                      },
                     ),
-                    backgroundColor: Colors.white,
-                    selectedColor: PunzhColors.brand.withValues(alpha: 0.22),
-                    side: BorderSide(
-                      color: selected
-                          ? PunzhColors.brand
-                          : const Color(0xFFADB5BD),
-                    ),
-                    onSelected: (_) => _goToLetter(letter),
                   ),
-                );
-              },
+                ),
+                SizedBox(
+                  width: _abcMoreRight ? _kAbcEdgeHintWidth : 8,
+                  child: _abcMoreRight
+                      ? _AbcScrollEdgeHint(
+                          icon: Icons.chevron_right,
+                          onTap: () => _nudgeAbcStrip(forward: true),
+                        )
+                      : null,
+                ),
+              ],
             ),
           ),
           if (_filtersApplyHere)
@@ -1299,6 +1371,39 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+/// Width reserved for an alphabet edge chevron (layout slot, not overlay).
+const double _kAbcEdgeHintWidth = 28;
+
+/// Chevron in its own strip beside the letter list (not stacked on chips).
+class _AbcScrollEdgeHint extends StatelessWidget {
+  const _AbcScrollEdgeHint({
+    required this.icon,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white,
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          width: _kAbcEdgeHintWidth,
+          height: 48,
+          child: Icon(
+            icon,
+            size: 22,
+            color: PunzhColors.navbar.withValues(alpha: 0.45),
+          ),
+        ),
+      ),
     );
   }
 }
