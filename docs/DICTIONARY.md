@@ -65,7 +65,7 @@ punzh-dict: `app/dict/search/krl.py` и `partials/search_help.html`; повед�
 - HTML из `articles.article_html` + `additions`.
 - Заголовок: `word_normalized` или orthography-clear (`lib/orthography.dart`).
 - Связи «см.» / «от» (и родственные `links.kind`): стек карточек, system back = pop.
-- Закладки: `bookmarks.json` вне пакета данных (переживают update БД).
+- Закладки: `bookmarks.json` вне пакета данных (переживают update БД); лимит `maxBookmarks` (100).
 
 ## Обновление данных
 

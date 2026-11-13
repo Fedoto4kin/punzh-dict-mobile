@@ -680,7 +680,10 @@ class _BookmarksPaneState extends State<_BookmarksPane> {
                     onDismissed: (_) async {
                       await widget.bookmarks.remove(id);
                       if (!context.mounted) return;
-                      showBookmarkSnackBar(context, added: false);
+                      showBookmarkSnackBar(
+                        context,
+                        result: BookmarkToggleResult.removed,
+                      );
                     },
                     child: ListTile(
                       title: Text(

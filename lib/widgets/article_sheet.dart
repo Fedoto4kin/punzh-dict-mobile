@@ -121,13 +121,13 @@ class _ArticleSheetPanelState extends State<ArticleSheetPanel> {
                                 color: on ? PunzhColors.brand : null,
                               ),
                               onPressed: () async {
-                                final added = await widget.bookmarks.toggle(
+                                final result = await widget.bookmarks.toggle(
                                   widget.articleId,
                                 );
                                 if (!context.mounted) return;
                                 showBookmarkSnackBar(
                                   context,
-                                  added: added,
+                                  result: result,
                                 );
                               },
                             );
