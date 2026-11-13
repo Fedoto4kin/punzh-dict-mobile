@@ -5,7 +5,7 @@
 
 **DDL / манифест / экспорт** — канон в sibling monorepo **punzh-dict**:
 
-- [`../punzh-dict/docs/plans/mobile-pack-contract.md`](../../punzh-dict/docs/plans/mobile-pack-contract.md)
+- [`../../punzh-dict/docs/plans/mobile-pack-contract.md`](../../punzh-dict/docs/plans/mobile-pack-contract.md)
 - `punzh-dict/app/dict/mobile/schema.py` + `export_mobile_db`
 
 Клиент *потребляет* пакет; схема сверяется по `schema_version`.
