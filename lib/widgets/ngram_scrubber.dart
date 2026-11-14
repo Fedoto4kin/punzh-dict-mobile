@@ -6,8 +6,9 @@ import "../theme.dart";
 /// Left-edge page rail: n-gram labels for letter pages.
 ///
 /// Large letters (≈max slots): marks stretch top-to-bottom.
-/// Medium letters (fewer marks): same slot pitch as a full rail, block
-/// centered on the vertical midline. Small letters (<2 marks) → hidden.
+/// Medium letters (fewer marks): same slot pitch as a full rail; free
+/// space mostly below so the pack sits near the top.
+/// Small letters (<2 marks) → hidden.
 class NgramScrubber extends StatelessWidget {
   const NgramScrubber({
     super.key,
@@ -24,6 +25,9 @@ class NgramScrubber extends StatelessWidget {
 
   static const _vPad = kNgramRailVerticalPadding / 2;
 
+  /// Fraction of leftover height above a short pack (rest goes below).
+  static const _shortPackTopShare = 1 / 8;
+
   @override
   Widget build(BuildContext context) {
     if (anchors.length < 2) return const SizedBox.shrink();
@@ -38,10 +42,11 @@ class NgramScrubber extends StatelessWidget {
           final maxSlots = maxLetterPagesForRailHeight(h);
           // Pitch of a "full" (large-letter) rail.
           final slotH = inner / maxSlots;
-          final packCentered = anchors.length < maxSlots;
+          final packShort = anchors.length < maxSlots;
           final blockH = anchors.length * slotH;
-          final topGap =
-              packCentered ? ((inner - blockH) / 2).clamp(0.0, inner) : 0.0;
+          final topGap = packShort
+              ? ((inner - blockH) * _shortPackTopShare).clamp(0.0, inner)
+              : 0.0;
 
           int indexAt(Offset local) {
             if (h <= 0) return 0;
@@ -68,12 +73,11 @@ class NgramScrubber extends StatelessWidget {
                     horizontal: 4,
                   ),
                   child: Column(
-                    mainAxisAlignment: packCentered
-                        ? MainAxisAlignment.center
-                        : MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      if (packShort) SizedBox(height: topGap),
                       for (var i = 0; i < anchors.length; i++)
-                        if (packCentered)
+                        if (packShort)
                           SizedBox(
                             height: slotH,
                             child: Center(
