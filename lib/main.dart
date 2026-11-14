@@ -31,7 +31,7 @@ class PunzhDictApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Словарь Пунжиной",
+      title: "Тверской карельский",
       theme: buildPunzhTheme(),
       // UI is always the light dictionary chrome; do not follow OS dark mode
       // (that washed out status-bar icons on the light drawer strip).

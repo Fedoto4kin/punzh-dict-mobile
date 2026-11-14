@@ -13,11 +13,13 @@
 
 ```bash
 scripts/build_apk.sh           # release (подписан upload-ключом) → punzh-dict-…-release.apk
-flutter build appbundle --release   # AAB для RuStore
+flutter build appbundle --release   # AAB для RuStore / AppGallery
 scripts/build_apk.sh --debug
 scripts/debug_usb.sh           # hot reload на USB (удобнее с ветки dev)
 scripts/sync_seed.sh           # export из punzh-dict → assets/dict.sqlite
 ```
+
+Витрина Huawei: [`store/huawei/`](store/huawei/) (тексты, чеклист AGC, иконка/скрины).
 
 ## Обновление словаря (пакет данных)
 

@@ -31,7 +31,9 @@ Sibling monorepo данных/сайта: **`../punzh-dict`**
 3. Сайт («скачать APK» с главной) — позже  
 4. Google Play — по готовности аккаунта / после пилота  
 
-RuStore: обычно **AAB** (`flutter build appbundle --release`) + при необходимости APK.
+RuStore / Huawei AppGallery: обычно **AAB** (`flutter build appbundle --release`) + при необходимости APK.  
+Ассеты и листинг Huawei: [`store/huawei/`](store/huawei/) (`listing.md`, `CHECKLIST.md`).  
+Пока одна и та же сборка висит в RuStore — для AppGallery **не** бампать `+N`; грузить тот же `1.0.0+N`. HMS для пилота не нужен.
 
 ## Версионирование приложения
 
