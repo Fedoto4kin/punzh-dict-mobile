@@ -1362,9 +1362,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
             ),
             trailing: const Icon(
-              Icons.keyboard_arrow_up,
+              Icons.more_horiz,
               size: 22,
-              color: Color(0xFFADB5BD),
+              color: PunzhColors.brand,
             ),
             onTap: () => _openArticle(item),
           ),
