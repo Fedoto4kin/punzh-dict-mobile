@@ -50,3 +50,7 @@ app.*.map.json
 # Seed DB (exported from punzh-dict; not committed)
 /assets/dict.sqlite
 /assets/dict.sqlite.gz
+
+# Store upload binaries (APK/AAB live in punzh-dict app/downloads or local drop folders)
+store/**/*.apk
+store/**/*.aab

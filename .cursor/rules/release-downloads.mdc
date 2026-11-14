@@ -1,0 +1,18 @@
+---
+description: After release APK build, publish to punzh-dict app/downloads and commit there
+alwaysApply: true
+---
+
+# Release APK → punzh-dict downloads
+
+After any **release** Android build for stores/site:
+
+1. Ensure `scripts/build_apk.sh` ran (it calls `scripts/publish_downloads.sh`) or run `scripts/publish_downloads.sh` explicitly.
+2. Artifacts land in sibling **`../punzh-dict/app/downloads/`**:
+   - `punzh-dict-{versionName}-{versionCode}.apk`
+   - `punzh-dict.apk` (stable latest)
+   - `manifest.json`
+3. **Commit in the punzh-dict repo** (`app/downloads/`), not only in punzh-dict-mobile.
+4. AAB for RuStore/Huawei stays under `store/`; do not treat AAB as the site download file.
+
+Do not skip the punzh-dict commit when finishing a store/release APK drop.

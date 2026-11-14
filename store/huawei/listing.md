@@ -5,9 +5,9 @@
 | Поле | Значение |
 |------|----------|
 | Package name | `host.punzh.punzh_dict` |
-| versionName | `1.0.0` |
-| versionCode | `19` |
-| Пакет | `build/.../punzh-dict-1.0.0-19-release.aab` (запасной APK рядом) |
+| versionName | `1.0.1` |
+| versionCode | `20` |
+| Пакет | тот же, что для RuStore: `store/rustore/punzh-dict-1.0.1-20-release.aab` (+ APK) |
 | Язык витрины | русский |
 | Категория | Образование (Education); доп. — Книги, если спрашивают |
 | Возраст | 0+ |

@@ -74,3 +74,8 @@ fi
 
 echo "APK: $built"
 ls -lh "$built"
+
+# Release store/site drop: copy into sibling punzh-dict and remind to commit there.
+if [[ "$MODE" == "release" ]]; then
+  "$SCRIPT_DIR/publish_downloads.sh"
+fi
