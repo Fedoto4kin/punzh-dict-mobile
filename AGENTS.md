@@ -74,26 +74,18 @@ version: X.Y.Z+N
 
 Update path: `{MOBILE_PACK_BASE_URL}/manifest.json` (prod `/mobile-pack/` на сайте).
 
-### После релизной сборки → `punzh-dict` / коммит
+### После релизной сборки → прод
 
-**Правило:** каждый **release** APK после сборки кладётся в sibling  
-[`../punzh-dict/app/downloads/`](../punzh-dict/app/downloads/) и **коммитится в репозитории punzh-dict** (не в mobile).
+**Правило:** каждый **release** APK заливается на karielan-hub как стабильное имя:
 
-| Файл в `app/downloads/` | Назначение |
-|-------------------------|------------|
-| `punzh-dict-{versionName}-{versionCode}.apk` | версионированный артефакт |
-| `punzh-dict.apk` | стабильное имя «скачать последнюю» |
-| `manifest.json` | version / sha256 / size / built_at |
+`krl@karielan-hub:~/punzh-dict/mobile-pack/punzh-dict-latest.apk`  
+URL: `https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk`
 
-`scripts/build_apk.sh` (release) сам вызывает `scripts/publish_downloads.sh`.  
-AAB для магазинов — отдельно (`store/rustore/`, AppGallery); в `downloads/` — APK для сайта/архива.
+`scripts/build_apk.sh` (release) вызывает `scripts/publish_downloads.sh` (`scp`).  
+Переопределение: `PUNZH_APK_DEPLOY`, `PUNZH_APK_REMOTE_PATH`.
 
-Коммит пример:
-
-```bash
-git -C ../punzh-dict add app/downloads/
-git -C ../punzh-dict commit -m "Add Android APK $(grep -E '^version:' pubspec.yaml | awk '{print $2}')."
-```
+AAB/APK для витрин магазинов — в `store/rustore/` и `store/huawei/`  
+(`punzh-dict-{versionName}-{versionCode}-release.{aab,apk}`). В git бинарники не коммитить.
 
 ### Чеклист перед релизным APK / AAB
 
@@ -102,6 +94,6 @@ git -C ../punzh-dict commit -m "Add Android APK $(grep -E '^version:' pubspec.ya
 3. Актуализировать seed при необходимости (`scripts/sync_seed.sh`).
 4. `flutter test` / `flutter analyze`.
 5. `scripts/build_apk.sh` и/или `flutter build appbundle --release`.
-6. Проверить `../punzh-dict/app/downloads/` (APK + `manifest.json`); **закоммитить в punzh-dict**.
+6. Проверить на сервере `~/punzh-dict/mobile-pack/punzh-dict-latest.apk`; копии в `store/`.
 7. В UI «О приложении» — та же `versionName`.
 8. Артефакт подписан **upload**, не debug (`jarsigner -verify` / Play App Signing dump).

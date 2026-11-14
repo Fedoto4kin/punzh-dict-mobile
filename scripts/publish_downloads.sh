@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Copy the latest release APK into sibling punzh-dict app/downloads/ for site/git.
-# Does NOT commit — commit in punzh-dict after review (see AGENTS.md).
+# Upload release APK to prod as a stable download name.
+# Target: krl@karielan-hub:~/punzh-dict/mobile-pack/punzh-dict-latest.apk
+# (nginx: https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk)
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -8,8 +9,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/env.sh"
 
 MOBILE_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PUNZH_ROOT="${PUNZH_DICT_ROOT:-$(cd "$MOBILE_ROOT/../punzh-dict" && pwd)}"
-DEST="$PUNZH_ROOT/app/downloads"
+REMOTE="${PUNZH_APK_DEPLOY:-krl@karielan-hub}"
+REMOTE_PATH="${PUNZH_APK_REMOTE_PATH:-punzh-dict/mobile-pack/punzh-dict-latest.apk}"
 
 version_line="$(grep -E '^version:' "$MOBILE_ROOT/pubspec.yaml" | head -1 | awk '{print $2}')"
 version_name="${version_line%%+*}"
@@ -31,32 +32,10 @@ if [[ ! -f "$src" ]]; then
   fi
 fi
 
-if [[ ! -d "$PUNZH_ROOT/app" ]]; then
-  echo "punzh-dict not found at $PUNZH_ROOT (set PUNZH_DICT_ROOT)." >&2
-  exit 1
-fi
+need() { command -v "$1" >/dev/null || { echo "Missing: $1" >&2; exit 1; }; }
+need scp
 
-mkdir -p "$DEST"
-versioned="punzh-dict-${version_name}-${version_code}.apk"
-cp -f "$src" "$DEST/$versioned"
-cp -f "$src" "$DEST/punzh-dict.apk"
-
-sha256="$(sha256sum "$DEST/punzh-dict.apk" | awk '{print $1}')"
-size="$(stat -c%s "$DEST/punzh-dict.apk")"
-built_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-
-cat >"$DEST/manifest.json" <<EOF
-{
-  "version": "$version_name",
-  "version_code": $version_code,
-  "filename": "punzh-dict.apk",
-  "sha256": "$sha256",
-  "size": $size,
-  "built_at": "$built_at",
-  "source": "$src_name"
-}
-EOF
-
-echo "Published to $DEST:"
-ls -lh "$DEST/$versioned" "$DEST/punzh-dict.apk" "$DEST/manifest.json"
-echo "Next: commit app/downloads/ in punzh-dict (git -C \"$PUNZH_ROOT\" …)."
+echo "Uploading $src_name ($version_line) → $REMOTE:~/$REMOTE_PATH"
+scp -o BatchMode=yes "$src" "$REMOTE:~/$REMOTE_PATH"
+ssh -o BatchMode=yes "$REMOTE" "ls -lh ~/$REMOTE_PATH"
+echo "URL: https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk"

@@ -1,7 +1,7 @@
 name: punzh_dict
 description: Offline dictionary of Tver Karelian (Punzhina).
 publish_to: "none"
-version: 1.0.1+20
+version: 1.0.2+21
 
 environment:
   sdk: ^3.14.0
@@ -38,6 +38,9 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: assets/images/app_icon.png
+  # Padded safe-zone asset (see assets/images/app_icon_launcher.png) so OEM
+  # circle/squircle masks do not clip the ornament.
+  image_path: assets/images/app_icon_launcher.png
   adaptive_icon_background: "#000000"
-  adaptive_icon_foreground: assets/images/app_icon.png
+  adaptive_icon_foreground: assets/images/app_icon_launcher.png
+  adaptive_icon_foreground_inset: 8

@@ -3,13 +3,13 @@
 Тексты и ассеты: [`listing.md`](listing.md), файлы в этой папке.  
 Общий контур магазинов: [`../../AGENTS.md`](../../AGENTS.md).
 
-Грузить ту же `versionName`/`versionCode`, что ушла в RuStore (сейчас **1.0.1+20**). Новый `+N` — только при новой сборке.
+Грузить ту же `versionName`/`versionCode`, что ушла в RuStore (сейчас **1.0.2+21**). Новый `+N` — только при новой сборке.
 
 ## До консоли
 
 - [ ] Аккаунт [HUAWEI Developers](https://developer.huawei.com/) / AppGallery Connect
 - [ ] Локально есть `android/key.properties` + upload keystore (ветка `main`)
-- [ ] Артефакт: `store/rustore/punzh-dict-1.0.1-20-release.aab` (и при необходимости `.apk`)
+- [ ] Артефакт: `store/rustore/punzh-dict-1.0.2-21-release.aab` (и при необходимости `.apk`)
 - [ ] Иконка + ≥3 разных скрина в `store/huawei/`
 
 ## Создание приложения
@@ -22,7 +22,7 @@
 ## App Signing и пакет
 
 - [ ] Включить **App Signing** для AAB
-- [ ] Загрузить `punzh-dict-1.0.1-20-release.aab`
+- [ ] Загрузить `punzh-dict-1.0.2-21-release.aab`
 - [ ] Дождаться компиляции AAB в AGC; при отказе консоли — залить APK той же версии
 - [ ] HMS / AppGallery SDK **не** нужны для этого пилота
 

@@ -1,18 +1,14 @@
 ---
-description: After release APK build, publish to punzh-dict app/downloads and commit there
+description: After release APK build, upload punzh-dict-latest.apk to karielan-hub
 alwaysApply: true
 ---
 
-# Release APK → punzh-dict downloads
+# Release APK → prod mobile-pack
 
-After any **release** Android build for stores/site:
+After any **release** Android build:
 
-1. Ensure `scripts/build_apk.sh` ran (it calls `scripts/publish_downloads.sh`) or run `scripts/publish_downloads.sh` explicitly.
-2. Artifacts land in sibling **`../punzh-dict/app/downloads/`**:
-   - `punzh-dict-{versionName}-{versionCode}.apk`
-   - `punzh-dict.apk` (stable latest)
-   - `manifest.json`
-3. **Commit in the punzh-dict repo** (`app/downloads/`), not only in punzh-dict-mobile.
-4. AAB for RuStore/Huawei stays under `store/`; do not treat AAB as the site download file.
-
-Do not skip the punzh-dict commit when finishing a store/release APK drop.
+1. `scripts/build_apk.sh` (calls `scripts/publish_downloads.sh`) or run publish explicitly.
+2. Upload target: `krl@karielan-hub:~/punzh-dict/mobile-pack/punzh-dict-latest.apk`
+3. Public URL: `https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk`
+4. Also copy versioned APK/AAB into `store/rustore/` and `store/huawei/` for store consoles (do not commit `*.apk` / `*.aab`).
+5. Do **not** commit APK into the punzh-dict git repo `app/downloads/`.
