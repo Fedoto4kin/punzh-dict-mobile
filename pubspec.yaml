@@ -1,7 +1,7 @@
 name: punzh_dict
 description: Offline dictionary of Tver Karelian (Punzhina).
 publish_to: "none"
-version: 0.6.5+17
+version: 0.7.0+18
 
 environment:
   sdk: ^3.14.0

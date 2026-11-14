@@ -8,12 +8,14 @@
 Агентам: [`AGENTS.md`](AGENTS.md).  
 Контракт пакета: [`../punzh-dict/docs/plans/mobile-pack-contract.md`](../punzh-dict/docs/plans/mobile-pack-contract.md).
 
-Версия приложения — `version: X.Y.Z+N` в `pubspec.yaml`.
+Версия приложения — `version: X.Y.Z+N` в `pubspec.yaml`.  
+Ветки: **`main`** — store/release (нужен `android/key.properties`); **`dev`** — USB/debug.
 
 ```bash
-scripts/build_apk.sh           # release → punzh-dict-X.Y.Z-N-release.apk
+scripts/build_apk.sh           # release (подписан upload-ключом) → punzh-dict-…-release.apk
+flutter build appbundle --release   # AAB для RuStore
 scripts/build_apk.sh --debug
-scripts/debug_usb.sh           # hot reload на USB
+scripts/debug_usb.sh           # hot reload на USB (удобнее с ветки dev)
 scripts/sync_seed.sh           # export из punzh-dict → assets/dict.sqlite
 ```
 

@@ -14,6 +14,25 @@ Sibling monorepo данных/сайта: **`../punzh-dict`**
 | Бэклог / история MVP | [`../punzh-dict/docs/plans/mobile-offline.md`](../punzh-dict/docs/plans/mobile-offline.md) |
 | Людям | [`README.md`](README.md) |
 
+## Ветки и подпись
+
+| Ветка | Release-подпись | Назначение |
+|-------|-----------------|------------|
+| **`main`** | upload keystore (`android/key.properties` + `*.p12`, **не в git**) | Пилот / магазины |
+| **`dev`** | debug (как раньше) | USB / повседневная отладка |
+
+Шаблон: [`android/key.properties.example`](android/key.properties.example).  
+Бэкап keystore + `key.properties` — вне репо (потеря = нельзя обновить приложение в магазине с тем же `applicationId`).
+
+### Порядок магазинов (пилот)
+
+1. **RuStore**  
+2. **Huawei AppGallery**  
+3. Сайт («скачать APK» с главной) — позже  
+4. Google Play — по готовности аккаунта / после пилота  
+
+RuStore: обычно **AAB** (`flutter build appbundle --release`) + при необходимости APK.
+
 ## Версионирование приложения
 
 **Источник правды — одна строка в `pubspec.yaml`:**
@@ -53,10 +72,12 @@ version: X.Y.Z+N
 
 Update path: `{MOBILE_PACK_BASE_URL}/manifest.json` (prod `/mobile-pack/` на сайте).
 
-### Чеклист перед релизным APK
+### Чеклист перед релизным APK / AAB
 
-1. Прочитать `version:` в `pubspec.yaml`, поднять `+N` / semver.
-2. Актуализировать seed при необходимости (`scripts/sync_seed.sh`).
-3. `flutter test` / `flutter analyze`.
-4. `scripts/build_apk.sh` → имя файла совпадает с version.
-5. В UI «О приложении» — та же `versionName`.
+1. Ветка **`main`**; есть локальные `android/key.properties` + keystore.
+2. Прочитать `version:` в `pubspec.yaml`, поднять `+N` / semver.
+3. Актуализировать seed при необходимости (`scripts/sync_seed.sh`).
+4. `flutter test` / `flutter analyze`.
+5. `scripts/build_apk.sh` и/или `flutter build appbundle --release`.
+6. В UI «О приложении» — та же `versionName`.
+7. Артефакт подписан **upload**, не debug (`jarsigner -verify` / Play App Signing dump).
