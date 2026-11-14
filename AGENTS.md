@@ -12,7 +12,8 @@ Sibling monorepo данных/сайта: **`../punzh-dict`**
 | Ручной регресс (P7) | [`docs/MANUAL-REGRESSION.md`](docs/MANUAL-REGRESSION.md) |
 | Контракт sqlite/manifest (punzh-dict) | [`../punzh-dict/docs/plans/mobile-pack-contract.md`](../punzh-dict/docs/plans/mobile-pack-contract.md) |
 | Бэклог / история MVP | [`../punzh-dict/docs/plans/mobile-offline.md`](../punzh-dict/docs/plans/mobile-offline.md) |
-| Людям | [`README.md`](README.md) |
+| Людям (продукт) | [`README.md`](README.md) |
+| Сборка и разработка | [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) |
 
 ## Ветки и подпись
 

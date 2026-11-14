@@ -1,6 +1,6 @@
-# punzh-dict-mobile
+# Словарь карельского языка (тверские говоры)
 
-Офлайн-приложение «Словарь карельского языка (тверские говоры)» Пунжиной.
+Офлайн-приложение для Android: электронная версия словаря Александры Васильевны Пунжиной.
 
 <p>
   <img src="store/rustore/01-index.png" width="180" alt="Алфавитный указатель" />
@@ -9,46 +9,40 @@
   <img src="store/rustore/04-menu.png" width="180" alt="Меню" />
 </p>
 
-Данные и сайт — sibling **`../punzh-dict`** (экспорт sqlite, `/mobile-pack/`, Django).  
-Семантика клиента: [`docs/DICTIONARY.md`](docs/DICTIONARY.md).  
-Ручной регресс: [`docs/MANUAL-REGRESSION.md`](docs/MANUAL-REGRESSION.md).  
-Агентам: [`AGENTS.md`](AGENTS.md).  
-Контракт пакета: [`../punzh-dict/docs/plans/mobile-pack-contract.md`](../punzh-dict/docs/plans/mobile-pack-contract.md).
+Алфавитный указатель, поиск, карточка статьи, меню.
 
-Версия приложения — `version: X.Y.Z+N` в `pubspec.yaml`.  
-Ветки: **`main`** — store/release (нужен `android/key.properties`); **`dev`** — USB/debug.
+## Зачем
 
-```bash
-scripts/build_apk.sh           # release → APK + scp на прод как punzh-dict-latest.apk
-flutter build appbundle --release   # AAB для RuStore / AppGallery
-scripts/publish_downloads.sh   # только заливка APK на сервер (если уже собран)
-scripts/build_apk.sh --debug
-scripts/debug_usb.sh           # hot reload на USB (удобнее с ветки dev)
-scripts/sync_seed.sh           # export из punzh-dict → assets/dict.sqlite
-```
+«Словарь карельского языка (тверские говоры)» (1994) — основное лексикографическое издание по языку тверских карел. Электронная версия на [сайте проекта](https://punzhina.krc.karelia.ru/) включает авторские правки и дополнения составителя.
 
-Скачать APK: https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk  
-Витрины: [`store/rustore/`](store/rustore/), [`store/huawei/`](store/huawei/).
+Приложение — тот же словарь на телефоне, когда интернета нет или сайт открывать неудобно. Входа и сети для чтения не нужно. Это ограниченный клиент веб-версии: расширенный поиск, онтология и остальные материалы сайта здесь не повторяются. Когда сеть есть, удобнее [полная веб-версия](https://punzhina.krc.karelia.ru/).
 
-## Обновление словаря (пакет данных)
+## Что внутри
 
-Прод: `https://punzhina.krc.karelia.ru/mobile-pack/manifest.json`  
-Публикация пакета — из **punzh-dict**: `scripts/publish_mobile_pack.sh`.
+- алфавитный указатель по карельским буквам;
+- поиск по заглавному карельскому слову и по русским переводам;
+- карточки статей со ссылками «см.» и «от»;
+- пометы и закладки;
+- работа целиком без интернета; обновление базы — по желанию, из меню.
 
-В меню приложения: «Проверить и загрузить обновление БД».
+## Как пользоваться
 
-## Seed
+Откройте букву в указателе или введите запрос в поиск.
 
-`assets/dict.sqlite` в git не коммитится. Для тестов — `test/fixtures/mini.sqlite`.
+- Кириллица ищет **русские переводы** с начала слова: `кош` находит «кошка», «кошелёк». Буква **ё** равна **е**.
+- Латиница и карельская орфография ищут **заглавное слово**. Совпадение полное; часть слова задаётся шаблоном: `.` — одна буква, `?` — любое число символов (`boi?` находит `boila`). Диакритику в запросе можно не ставить.
+- Если точного карельского слова нет, приложение предложит близкие написания.
+- Из карточки переход по «см.» и «от»; назад — системной кнопкой.
+- Закладки, справка «Как искать» и пункт «Проверить и загрузить обновление БД» — в меню.
 
-```bash
-# нужен запущенный Django-контейнер в punzh-dict
-scripts/sync_seed.sh
-```
+Та же справка по поиску встроена в приложение.
 
-## Тесты
+## Скачать
 
-```bash
-flutter test
-flutter analyze
-```
+APK: <https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk>
+
+Пилот в магазинах: RuStore и Huawei AppGallery. Правообладатель словаря — [КарНЦ РАН](https://www.krc.karelia.ru/).
+
+## Разработка
+
+Сборка, ветки, seed и тесты — в [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
