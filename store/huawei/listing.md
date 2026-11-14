@@ -6,8 +6,8 @@
 |------|----------|
 | Package name | `host.punzh.punzh_dict` |
 | versionName | `1.0.3` |
-| versionCode | `22` |
-| Пакет | тот же, что для RuStore: `store/rustore/punzh-dict-1.0.3-22-release.aab` (+ APK) |
+| versionCode | `23` |
+| Пакет | тот же, что для RuStore: `store/rustore/punzh-dict-1.0.3-23-release.aab` (+ APK) |
 | Язык витрины | русский |
 | Категория | Образование (Education); доп. — Книги, если спрашивают |
 | Возраст | 0+ |

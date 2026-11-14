@@ -1,7 +1,7 @@
 name: punzh_dict
 description: Offline dictionary of Tver Karelian (Punzhina).
 publish_to: "none"
-version: 1.0.3+22
+version: 1.0.3+23
 
 environment:
   sdk: ^3.14.0
@@ -43,4 +43,4 @@ flutter_launcher_icons:
   image_path: assets/images/app_icon_launcher.png
   adaptive_icon_background: "#000000"
   adaptive_icon_foreground: assets/images/app_icon_launcher.png
-  adaptive_icon_foreground_inset: 8
+  adaptive_icon_foreground_inset: 10
