@@ -21,10 +21,11 @@ scripts/publish_downloads.sh   # только заливка APK на серве
 scripts/build_apk.sh --debug
 scripts/debug_usb.sh           # hot reload на USB (удобнее с ветки dev)
 scripts/sync_seed.sh           # export из punzh-dict → assets/dict.sqlite
+scripts/gen_store_icon.sh      # 512×512 для RuStore / AppGallery (не в git)
 ```
 
 Скачать APK: <https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk>  
-Витрины: [`store/rustore/`](../store/rustore/), [`store/huawei/`](../store/huawei/).
+Витрины: [`store/rustore/`](../store/rustore/), [`store/huawei/`](../store/huawei/) — staging под консоль; APK/AAB и `icon-512.png` локально.
 
 ## Обновление словаря (пакет данных)
 

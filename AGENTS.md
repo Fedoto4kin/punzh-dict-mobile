@@ -85,8 +85,10 @@ URL: `https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk`
 `scripts/build_apk.sh` (release) вызывает `scripts/publish_downloads.sh` (`scp`).  
 Переопределение: `PUNZH_APK_DEPLOY`, `PUNZH_APK_REMOTE_PATH`.
 
-AAB/APK для витрин магазинов — в `store/rustore/` и `store/huawei/`  
-(`punzh-dict-{versionName}-{versionCode}-release.{aab,apk}`). В git бинарники не коммитить.
+AAB/APK для витрин — локально в `store/rustore/` и `store/huawei/`
+(`punzh-dict-{versionName}-{versionCode}-release.{aab,apk}`); в git не коммитить.
+Иконка витрины: `scripts/gen_store_icon.sh` → `store/*/icon-512.png` (тоже не в git).
+В git из `store/`: тексты (`listing.md`, `CHECKLIST.md`) и скрины для README.
 
 ### Чеклист перед релизным APK / AAB
 

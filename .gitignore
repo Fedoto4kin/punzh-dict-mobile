@@ -51,6 +51,7 @@ app.*.map.json
 /assets/dict.sqlite
 /assets/dict.sqlite.gz
 
-# Store upload binaries (APK/AAB live in punzh-dict app/downloads or local drop folders)
+# Store drop folder: binaries and regenerated listing icon (from app_icon_launcher.png)
 store/**/*.apk
 store/**/*.aab
+store/**/icon-512.png

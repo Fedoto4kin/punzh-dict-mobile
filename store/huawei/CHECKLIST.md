@@ -10,7 +10,7 @@
 - [ ] Аккаунт [HUAWEI Developers](https://developer.huawei.com/) / AppGallery Connect
 - [ ] Локально есть `android/key.properties` + upload keystore (ветка `main`)
 - [ ] Артефакт: `store/rustore/punzh-dict-1.0.3-23-release.aab` (и при необходимости `.apk`)
-- [ ] Иконка + ≥3 разных скрина в `store/huawei/`
+- [ ] `scripts/gen_store_icon.sh` → `icon-512.png`; ≥3 разных скрина в `store/huawei/`
 
 ## Создание приложения
 
