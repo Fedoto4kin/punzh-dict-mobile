@@ -6,6 +6,8 @@
 
 | Тема | Где |
 |------|-----|
+| Функции v1 | [`FEATURES-V1.md`](FEATURES-V1.md) |
+| Беклог следующей версии | [`BACKLOG.md`](BACKLOG.md) |
 | Семантика клиента | [`DICTIONARY.md`](DICTIONARY.md) |
 | Ручной регресс | [`MANUAL-REGRESSION.md`](MANUAL-REGRESSION.md) |
 | Агентам (ветки, версия, магазины) | [`AGENTS.md`](../AGENTS.md) |
@@ -16,16 +18,16 @@
 
 ```bash
 scripts/build_apk.sh           # release → APK + scp на прод как punzh-dict-latest.apk
-flutter build appbundle --release   # AAB для RuStore / AppGallery
+flutter build appbundle --release   # AAB для RuStore
 scripts/publish_downloads.sh   # только заливка APK на сервер (если уже собран)
 scripts/build_apk.sh --debug
 scripts/debug_usb.sh           # hot reload на USB (удобнее с ветки dev)
 scripts/sync_seed.sh           # export из punzh-dict → assets/dict.sqlite
-scripts/gen_store_icon.sh      # 512×512 для RuStore / AppGallery (не в git)
+scripts/gen_store_icon.sh      # 512×512 для RuStore (не в git)
 ```
 
 Скачать APK: <https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk>  
-Витрины: [`store/rustore/`](../store/rustore/), [`store/huawei/`](../store/huawei/) — staging под консоль; APK/AAB и `icon-512.png` локально.
+Витрина: [`store/rustore/`](../store/rustore/) — staging под консоль; APK/AAB и `icon-512.png` локально.
 
 ## Обновление словаря (пакет данных)
 

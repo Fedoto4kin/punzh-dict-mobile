@@ -10,5 +10,5 @@ After any **release** Android build:
 1. `scripts/build_apk.sh` (calls `scripts/publish_downloads.sh`) or run publish explicitly.
 2. Upload target: `krl@karielan-hub:~/punzh-dict/mobile-pack/punzh-dict-latest.apk`
 3. Public URL: `https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk`
-4. Also copy versioned APK/AAB into `store/rustore/` and `store/huawei/` for store consoles (do not commit `*.apk` / `*.aab`).
+4. Also copy versioned APK/AAB into `store/rustore/` for store consoles (do not commit `*.apk` / `*.aab`).
 5. Do **not** commit APK into the punzh-dict git repo `app/downloads/`.

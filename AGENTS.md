@@ -8,10 +8,11 @@ Sibling monorepo данных/сайта: **`../punzh-dict`**
 
 | Тема | Где |
 |------|-----|
+| Функции v1 | [`docs/FEATURES-V1.md`](docs/FEATURES-V1.md) |
+| Беклог следующей версии | [`docs/BACKLOG.md`](docs/BACKLOG.md) |
 | Семантика словаря (этот repo) | [`docs/DICTIONARY.md`](docs/DICTIONARY.md) |
-| Ручной регресс (P7) | [`docs/MANUAL-REGRESSION.md`](docs/MANUAL-REGRESSION.md) |
+| Ручной регресс | [`docs/MANUAL-REGRESSION.md`](docs/MANUAL-REGRESSION.md) |
 | Контракт sqlite/manifest (punzh-dict) | [`../punzh-dict/docs/plans/mobile-pack-contract.md`](../punzh-dict/docs/plans/mobile-pack-contract.md) |
-| Бэклог / история MVP | [`../punzh-dict/docs/plans/mobile-offline.md`](../punzh-dict/docs/plans/mobile-offline.md) |
 | Людям (продукт) | [`README.md`](README.md) |
 | Сборка и разработка | [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md) |
 
@@ -28,13 +29,11 @@ Sibling monorepo данных/сайта: **`../punzh-dict`**
 ### Порядок магазинов (пилот)
 
 1. **RuStore**  
-2. **Huawei AppGallery**  
-3. Сайт («скачать APK» с главной) — позже  
-4. Google Play — по готовности аккаунта / после пилота  
+2. Сайт («скачать APK» с главной) — позже  
+3. Google Play — по готовности аккаунта / после пилота  
 
-RuStore / Huawei AppGallery: обычно **AAB** (`flutter build appbundle --release`) + при необходимости APK.  
-Ассеты и листинг Huawei: [`store/huawei/`](store/huawei/) (`listing.md`, `CHECKLIST.md`).  
-Пока одна и та же сборка висит в RuStore — для AppGallery **не** бампать `+N`; грузить тот же `1.0.0+N`. HMS для пилота не нужен.
+RuStore: обычно **AAB** (`flutter build appbundle --release`) + при необходимости APK.  
+Ассеты и листинг: [`store/rustore/`](store/rustore/).
 
 ## Версионирование приложения
 
@@ -85,10 +84,10 @@ URL: `https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk`
 `scripts/build_apk.sh` (release) вызывает `scripts/publish_downloads.sh` (`scp`).  
 Переопределение: `PUNZH_APK_DEPLOY`, `PUNZH_APK_REMOTE_PATH`.
 
-AAB/APK для витрин — локально в `store/rustore/` и `store/huawei/`
+AAB/APK для витрин — локально в `store/rustore/`
 (`punzh-dict-{versionName}-{versionCode}-release.{aab,apk}`); в git не коммитить.
-Иконка витрины: `scripts/gen_store_icon.sh` → `store/*/icon-512.png` (тоже не в git).
-В git из `store/`: тексты (`listing.md`, `CHECKLIST.md`) и скрины для README.
+Иконка витрины: `scripts/gen_store_icon.sh` → `store/rustore/icon-512.png` (тоже не в git).
+В git из `store/rustore/`: тексты (`listing.md`, `CHECKLIST.md`) и скрины для README.
 
 ### Чеклист перед релизным APK / AAB
 

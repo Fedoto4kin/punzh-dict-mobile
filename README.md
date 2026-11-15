@@ -41,7 +41,7 @@
 
 APK: <https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk>
 
-Пилот в магазинах: RuStore и Huawei AppGallery. Правообладатель словаря — [КарНЦ РАН](https://www.krc.karelia.ru/).
+Пилот в магазинах: RuStore. Правообладатель словаря — [КарНЦ РАН](https://www.krc.karelia.ru/).
 
 ## Разработка
 

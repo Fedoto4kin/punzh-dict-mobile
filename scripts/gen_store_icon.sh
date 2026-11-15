@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Generate store listing icons (512×512) from the launcher source.
-# Not committed — run before uploading to RuStore / AppGallery.
+# Not committed — run before uploading to RuStore.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -21,7 +21,7 @@ src = Image.open(src_path).convert("RGBA")
 bg = Image.new("RGB", src.size, (0, 0, 0))
 bg.paste(src, mask=src.split()[3])
 out = bg.resize((512, 512), Image.Resampling.LANCZOS)
-for rel in ("store/rustore/icon-512.png", "store/huawei/icon-512.png"):
+for rel in ("store/rustore/icon-512.png",):
     path = root / rel
     path.parent.mkdir(parents=True, exist_ok=True)
     out.save(path, "PNG", optimize=True)

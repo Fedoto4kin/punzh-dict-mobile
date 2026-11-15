@@ -1,4 +1,4 @@
-# Ручной регресс (P7)
+# Ручной регресс
 
 Прогон на устройстве / USB debug. Seed: актуальный `assets/dict.sqlite`
 (`scripts/sync_seed.sh`) или уже установленный runtime-пакет.
