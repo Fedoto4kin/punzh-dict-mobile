@@ -27,7 +27,8 @@ class ArticleSummary {
   /// Short POS marks (`tags.tag`, type=2), already ordered.
   final List<String> posTags;
 
-  /// Own Russian glosses from `translations.rus_word`.
+  /// Own Russian glosses from `translations.rus_word`
+  /// (`hide_from_register = 0` only).
   final List<String> translations;
 
   /// Display headwords of outgoing see/cf targets.
@@ -609,6 +610,7 @@ class DictionaryRepository {
       SELECT article_id, rus_word
       FROM translations
       WHERE article_id IN ($placeholders)
+        AND hide_from_register = 0
       ORDER BY id
       """,
       ids,
@@ -689,6 +691,7 @@ class DictionaryRepository {
         SELECT article_id, rus_word
         FROM translations
         WHERE article_id IN ($ph)
+          AND hide_from_register = 0
         ORDER BY id
         """,
         uniq,

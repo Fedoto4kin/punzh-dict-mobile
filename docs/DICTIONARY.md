@@ -38,6 +38,13 @@ punzh-dict: `app/dict/search/krl.py` и `partials/search_help.html`; повед�
 - Индекс: `translations.rus_word`, префикс `foo%` (ё→е).
 - Без лемм, стопов, multi-word OR, `?f=exact/all`, expand по «см.» в поиске.
 
+## Glosses в списке
+
+- В превью списка (свои и унаследованные по см./от) только строки с
+  `translations.hide_from_register = 0` (как веб-регистр `/register/`).
+- RU-поиск по индексу переводов флаг не режет: скрытый gloss не показывается
+  в строке списка, но может найти статью.
+
 ## Пометы (фильтры KRL)
 
 - Только после KRL-поиска с непустой primary-выдачей.

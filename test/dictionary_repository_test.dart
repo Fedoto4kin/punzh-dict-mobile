@@ -35,4 +35,24 @@ void main() {
     expect(detail, isNotNull);
     expect(detail!.articleHtml, isNotEmpty);
   });
+
+  test("hidden gloss: searchable, omitted from list preview", () async {
+    final mini = await openMiniRepo();
+    final repo = mini.repo;
+
+    // RU search still matches hide_from_register=1 rows.
+    final hits = await repo.searchRussian("скрыт");
+    expect(hits.map((a) => a.word), contains("aiga"));
+    final hit = hits.firstWhere((a) => a.word == "aiga");
+    expect(hit.translations, ["время"]);
+    expect(hit.translations, isNot(contains("скрытое")));
+    expect(hit.previewLine, isNot(contains("скрытое")));
+
+    // Letter/list enrich hides the same row.
+    final aiga = (await repo.articlesByLetter("A"))
+        .firstWhere((a) => a.word == "aiga");
+    final enriched = await repo.enrichSummaries([aiga], chunkSize: 1);
+    expect(enriched.single.translations, ["время"]);
+    expect(enriched.single.previewLine, isNot(contains("скрытое")));
+  });
 }
