@@ -41,5 +41,6 @@ const String updateDbMenuLabel = "Проверить и загрузить об�
 const String updateDbPaneTitle = "Обновление словаря";
 
 /// Non-store app update (F2) — shown inside «О приложении».
-const String checkAppUpdateLabel = "Проверить обновление приложения";
-const String downloadAppUpdateLabel = "Скачать обновление";
+/// Keep labels short: FilledButton clips long Russian lines on narrow drawers.
+const String checkAppUpdateLabel = "Проверить обновление";
+const String downloadAppUpdateLabel = "Скачать";
