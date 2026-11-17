@@ -1,5 +1,5 @@
 ---
-description: After release APK build, upload punzh-dict-latest.apk to karielan-hub
+description: After release APK build, upload punzh-dict-latest.apk and app-manifest.json to karielan-hub
 alwaysApply: true
 ---
 
@@ -8,7 +8,22 @@ alwaysApply: true
 After any **release** Android build:
 
 1. `scripts/build_apk.sh` (calls `scripts/publish_downloads.sh`) or run publish explicitly.
-2. Upload target: `krl@karielan-hub:~/punzh-dict/mobile-pack/punzh-dict-latest.apk`
-3. Public URL: `https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk`
+2. Upload targets on `krl@karielan-hub`:
+   - `~/punzh-dict/mobile-pack/punzh-dict-latest.apk`
+   - `~/punzh-dict/mobile-pack/app-manifest.json` (обязательно вместе с APK)
+3. Public URLs:
+   - APK file: `https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk`
+   - Tracked download: `https://punzhina.krc.karelia.ru/app/apk/`
+   - App manifest: `https://punzhina.krc.karelia.ru/mobile-pack/app-manifest.json`
 4. Also copy versioned APK/AAB into `store/rustore/` for store consoles (do not commit `*.apk` / `*.aab`).
-5. Do **not** commit APK into the punzh-dict git repo `app/downloads/`.
+5. Do **not** commit APK or `app-manifest.json` into the punzh-dict git repo `app/downloads/`.
+
+## app-manifest.json (F2)
+
+- Owner: **this repo's** `scripts/publish_downloads.sh` only. Do not ask punzh-dict /
+  Django / `publish_mobile_pack.sh` to write or rewrite it (pack `manifest.json` is
+  dictionary data; app updates are independent).
+- An APK upload **without** updating `app-manifest.json` is **incomplete** — non-store
+  clients will not see the new `version_code`.
+- Fields: `version_name`, `version_code` (int from `pubspec` `+N`), `apk_url`
+  (default `/app/apk/`), `published_at` (UTC). Client compares **only** `version_code`.

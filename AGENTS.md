@@ -72,17 +72,23 @@ version: X.Y.Z+N
 Скрипты: `scripts/build_apk.sh`, `scripts/publish_downloads.sh`, `scripts/debug_usb.sh`, `scripts/sync_seed.sh`
 (seed тянется из контейнера Django в **punzh-dict**).
 
-Update path: `{MOBILE_PACK_BASE_URL}/manifest.json` (prod `/mobile-pack/` на сайте).
+Update path (словарь): `{MOBILE_PACK_BASE_URL}/manifest.json` (prod `/mobile-pack/`).  
+Update path (приложение, F2): `{MOBILE_PACK_BASE_URL}/app-manifest.json` — пишет
+**только** `publish_downloads.sh` при выгрузке APK (не `publish_mobile_pack.sh`).
 
 ### После релизной сборки → прод
 
-**Правило:** каждый **release** APK заливается на karielan-hub как стабильное имя:
+**Правило:** каждый **release** APK заливается на karielan-hub как стабильное имя
+**вместе** с `app-manifest.json` (без манифеста выгрузка неполная):
 
 `krl@karielan-hub:~/punzh-dict/mobile-pack/punzh-dict-latest.apk`  
-URL: `https://punzhina.krc.karelia.ru/mobile-pack/punzh-dict-latest.apk`
+`krl@karielan-hub:~/punzh-dict/mobile-pack/app-manifest.json`  
+Tracked download: `https://punzhina.krc.karelia.ru/app/apk/`  
+App manifest: `https://punzhina.krc.karelia.ru/mobile-pack/app-manifest.json`
 
 `scripts/build_apk.sh` (release) вызывает `scripts/publish_downloads.sh` (`scp`).  
-Переопределение: `PUNZH_APK_DEPLOY`, `PUNZH_APK_REMOTE_PATH`.
+Переопределение: `PUNZH_APK_DEPLOY`, `PUNZH_APK_REMOTE_PATH`, `PUNZH_APP_MANIFEST_REMOTE_PATH`,
+`PUNZH_APK_DOWNLOAD_URL`.
 
 AAB/APK для витрин — локально в `store/rustore/`
 (`punzh-dict-{versionName}-{versionCode}-release.{aab,apk}`); в git не коммитить.
@@ -96,6 +102,6 @@ AAB/APK для витрин — локально в `store/rustore/`
 3. Актуализировать seed при необходимости (`scripts/sync_seed.sh`).
 4. `flutter test` / `flutter analyze`.
 5. `scripts/build_apk.sh` и/или `flutter build appbundle --release`.
-6. Проверить на сервере `~/punzh-dict/mobile-pack/punzh-dict-latest.apk`; копии в `store/`.
-7. В UI «О приложении» — та же `versionName`.
+6. Проверить на сервере `punzh-dict-latest.apk` **и** `app-manifest.json` (`version_code` = `+N`); копии в `store/`.
+7. В UI «О приложении» — та же `versionName`; для sideload — кнопка проверки приложения.
 8. Артефакт подписан **upload**, не debug (`jarsigner -verify` / Play App Signing dump).

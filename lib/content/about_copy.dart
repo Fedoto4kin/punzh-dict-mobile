@@ -39,3 +39,7 @@ const String rightsHolderLine = "КарНЦ РАН";
 
 const String updateDbMenuLabel = "Проверить и загрузить обновление БД";
 const String updateDbPaneTitle = "Обновление словаря";
+
+/// Non-store app update (F2) — shown inside «О приложении».
+const String checkAppUpdateLabel = "Проверить обновление приложения";
+const String downloadAppUpdateLabel = "Скачать обновление";

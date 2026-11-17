@@ -5,13 +5,16 @@ import "package:material_ui/material_ui.dart";
 import "package:package_info_plus/package_info_plus.dart";
 
 import "../content/about_copy.dart";
+import "../data/app_manifest.dart";
+import "../data/app_updater.dart";
 import "../data/bookmark_store.dart";
-import "bookmark_feedback.dart";
-import "../data/dictionary_repository.dart";
 import "../data/db_updater.dart";
+import "../data/dictionary_repository.dart";
 import "../data/dictionary_session.dart";
+import "../data/install_source.dart";
 import "../data/pack_manifest.dart";
 import "../open_external_url.dart";
+import "bookmark_feedback.dart";
 import "../theme.dart";
 
 enum _DrawerPane {
@@ -123,27 +126,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
               _DrawerPane.aboutApp => _AboutPane(
                   title: aboutAppTitle,
                   onBack: _goMenu,
-                  child: FutureBuilder<PackageInfo>(
-                    future: PackageInfo.fromPlatform(),
-                    builder: (context, snapshot) {
-                      final version = snapshot.data?.version ?? "…";
-                      final theme = Theme.of(context);
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Версия $version",
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: PunzhColors.brandDark,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          const _AboutHtml(aboutAppBody),
-                        ],
-                      );
-                    },
-                  ),
+                  child: const _AboutAppPane(),
                 ),
               _DrawerPane.updateDb => _AboutPane(
                   title: updateDbPaneTitle,
@@ -297,6 +280,136 @@ class _MenuPane extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AboutAppPane extends StatefulWidget {
+  const _AboutAppPane();
+
+  @override
+  State<_AboutAppPane> createState() => _AboutAppPaneState();
+}
+
+class _AboutAppPaneState extends State<_AboutAppPane> {
+  late final Future<PackageInfo> _packageInfo = PackageInfo.fromPlatform();
+  late final Future<bool> _storeInstall = isStoreInstall();
+  late final AppUpdater _updater = AppUpdater();
+
+  bool _busy = false;
+  String? _status;
+  String? _error;
+  AppManifest? _available;
+
+  Future<void> _check() async {
+    setState(() {
+      _busy = true;
+      _error = null;
+      _status = "Проверка…";
+      _available = null;
+    });
+    try {
+      final info = await _packageInfo;
+      final localCode = int.tryParse(info.buildNumber) ?? 0;
+      final result = await _updater.check(localVersionCode: localCode);
+      if (!mounted) return;
+      setState(() {
+        _busy = false;
+        _status = result.message;
+        _error = result.kind == AppUpdateCheckKind.networkError ||
+                result.kind == AppUpdateCheckKind.badManifest
+            ? result.message
+            : null;
+        if (result.kind == AppUpdateCheckKind.networkError ||
+            result.kind == AppUpdateCheckKind.badManifest) {
+          _status = null;
+        }
+        if (result.kind == AppUpdateCheckKind.available) {
+          _available = result.manifest;
+          _status = result.message;
+        }
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _busy = false;
+        _status = null;
+        _error = looksLikeConnectivityFailure(e) ? noInternetMessage : "$e";
+      });
+    }
+  }
+
+  Future<void> _download() async {
+    final url = _available?.apkUrl ?? defaultApkDownloadUrl;
+    final ok = await openExternalUrl(url);
+    if (!mounted) return;
+    if (!ok) {
+      setState(() => _error = "Не удалось открыть ссылку для скачивания.");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final versionStyle = theme.textTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.w600,
+      color: PunzhColors.brandDark,
+    );
+    final body = theme.textTheme.bodyLarge?.copyWith(
+      height: 1.45,
+      color: PunzhColors.navbar,
+    );
+    final muted = theme.textTheme.bodyMedium?.copyWith(
+      color: const Color(0xFF6C757D),
+      height: 1.35,
+    );
+
+    return FutureBuilder<List<Object?>>(
+      future: Future.wait<Object?>([_packageInfo, _storeInstall]),
+      builder: (context, snapshot) {
+        final info = snapshot.data?[0] as PackageInfo?;
+        final fromStore = snapshot.data?[1] as bool? ?? false;
+        final version = info?.version ?? "…";
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text("Версия $version", style: versionStyle),
+            const SizedBox(height: 12),
+            const _AboutHtml(aboutAppBody),
+            if (snapshot.connectionState == ConnectionState.done &&
+                !fromStore) ...[
+              const SizedBox(height: 20),
+              Text("Обновление приложения", style: theme.textTheme.titleSmall),
+              const SizedBox(height: 8),
+              if (_status != null) Text(_status!, style: body),
+              if (_error != null)
+                Text(
+                  _error!,
+                  style: body?.copyWith(color: const Color(0xFFB00020)),
+                ),
+              const SizedBox(height: 12),
+              if (_available != null)
+                FilledButton(
+                  onPressed: _busy ? null : _download,
+                  child: const Text(downloadAppUpdateLabel),
+                )
+              else
+                FilledButton(
+                  onPressed: _busy ? null : _check,
+                  child: Text(
+                    _busy ? "Подождите…" : checkAppUpdateLabel,
+                  ),
+                ),
+              const SizedBox(height: 8),
+              Text(
+                "Для установок с сайта. Скачивание открывается в браузере.",
+                style: muted,
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
